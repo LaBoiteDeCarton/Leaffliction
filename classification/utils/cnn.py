@@ -9,7 +9,7 @@ from keras.layers import Flatten # Layer used to flatten 2D arrays for fully-con
 from keras.layers import Dense # This layer adds fully-connected layers to the neural network.
 from keras.layers import Input
 
-from utils.data_augmentation import get_augmentation
+from classification.utils.data_modification import get_augmentation
 
 
 

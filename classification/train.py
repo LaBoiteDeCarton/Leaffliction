@@ -1,6 +1,6 @@
 
 import numpy as np
-from utils.preprocessing import get_preprocessing
+from classification.utils.data_preprocessing import get_preprocessing
 from utils.cnn import get_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint # Classes used to save weights and stop training when improvements reach a limit
 from keras.models import load_model

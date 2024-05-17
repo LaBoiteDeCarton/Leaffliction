@@ -21,6 +21,8 @@ venv/
 
 datasets
 
-DS_Store
+.DS_Store
 
 *.keras
+
+augmented_images/
