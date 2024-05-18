@@ -3,3 +3,5 @@ numpy
 plotly
 tensorflow
 matplotlib
+argparse
+pyfiglet

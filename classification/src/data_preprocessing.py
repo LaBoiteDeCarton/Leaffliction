@@ -21,8 +21,8 @@ def get_preprocessing(directory):
     datasets = tf.keras.utils.image_dataset_from_directory(
         directory,  # Directory where the images are located
         labels = 'inferred', # Classes will be inferred according to the structure of the directory
-        label_mode = 'categorical',
-        class_names = list,
+        label_mode = 'categorical', # Labels will be one-hot encoded
+        class_names = list, # List of class names
         batch_size = 16,    # Number of processed samples before updating the model's weights
         image_size = (256, 256), # Defining a fixed dimension for all images
         shuffle = True,  # Shuffling data

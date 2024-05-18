@@ -1,85 +1,62 @@
-
-import numpy as np
-from classification.utils.data_preprocessing import get_preprocessing
-from utils.cnn import get_model
-from keras.callbacks import EarlyStopping, ModelCheckpoint # Classes used to save weights and stop training when improvements reach a limit
-from keras.models import load_model
-from PIL import Image
+import argparse
 import os
-from keras.models import Model
-import matplotlib.pyplot as plt
-from keras.models import Model
+from pyfiglet import Figlet
+from termcolor import colored
+from src.data_preprocessing import get_preprocessing
+from src.data_augmentation import augment_data
+from src.train_model import train_model
+f = Figlet(font='slant')
 
 
-def train():
-    # Check if the model already exists
-    train, test, validation = get_preprocessing()
-    if os.path.exists('best_model.keras'):
-        # Load the model from the file
-        model = load_model('best_model.keras')
-    else:
-        model = get_model()
-        # Defining an Early Stopping and Model Checkpoints
-        early_stopping = EarlyStopping(monitor = 'val_accuracy',
-                                    patience = 5, mode = 'max',
-                                    restore_best_weights = True)
-
-        checkpoint = ModelCheckpoint('best_model.keras',
-                                    monitor = 'val_accuracy',
-                                    save_best_only = True)
-        # Training and Testing Model
-        try:
-            history = model.fit(
-                train, epochs = 50,
-                validation_data = test,
-                callbacks = [early_stopping, checkpoint])
-            
-            # Save the model after training
-            model.save('best_model.keras')
-        except Exception as e:
-            print("An error occurred:", e)
-
-    # model.summary()
-
-    # preds = model.predict(validation)  # Running model on the validation dataset
-    # val_loss, val_acc = model.evaluate(test) # Obtaining Loss and Accuracy on the val dataset
-
-    # print('\nValidation Loss: ', val_loss)
-    # print('\nValidation Accuracy: ', np.round(val_acc * 100), '%')
-
-    # for layer in model.layers:
-    #     print(layer.name)
-
-    # layer_name = 'conv2d_4'
-    # intermediate_layer_model = Model(inputs=model.input, outputs=model.get_layer(layer_name).output)
-    # intermediate_output = intermediate_layer_model.predict(validation)
+def chek_args(args):
+    if not os.path.isdir(args.directory):
+        raise ValueError("directory must be a valid path")
+    if not os.listdir(args.directory):
+        raise ValueError("directory must not be empty")
+    if args.max_images < 0:
+        raise ValueError("max_images must be a positive integer")
+    if args.max_images_validation < 0:
+        raise ValueError("max_images_validation must be a positive integer")
+    if args.max_images_test < 0:
+        raise ValueError("max_images_test must be a positive integer")
 
 
-    # Loading an image from the Validation/ Powdery directory
-    image_path = '../datasets/Validation/Powdery/9b6a318cc5721d73.jpg'
-    original_image = Image.open(image_path)
-    og_width, og_height = original_image.size
+def data_augmentation(directory, max_images, max_images_validation,
+                      max_images_test):
+    augment_data(directory, "train", max_images)
+    augment_data(directory, "validation", max_images_validation)
+    augment_data(directory, "test", max_images_test)
 
-    # Resizing image for optimal performance
-    new_width = int(og_width * .20) # 20% of the original size
-    new_height = int(og_height * .20) # 20% of the original size
 
-    resized_img = original_image.resize((new_width, new_height))
-    print('Picture of a Powdery Plant: \n')
-    resized_img
+def train(main_classe, num_classes):
+    path = f"learnings/models/{main_classe}_model.keras"
+    if os.path.exists(path):
+        print("Model already exists")
+        return
+    train_path = f"learnings/augmented_images/{main_classe}/train"
+    train = get_preprocessing(train_path)
+    test = get_preprocessing(f"learnings/augmented_images/{main_classe}/test")
+    train_model(train, test, path, num_classes)
 
-    # Manually preprocessing image
-    preprocessed_image = original_image.resize((256, 256))
-    preprocessed_image = np.array(preprocessed_image) / 255.0
-
-    preds = model.predict(np.expand_dims(preprocessed_image, axis = 0))
-    labels = ['Healthy', 'Powdery', 'Rust']
-
-    preds_class = np.argmax(preds)
-    preds_label = labels[preds_class]
-
-    print(f'\nPredicted Class: {preds_label}')
-    print(f'\nConfidence Score: {preds[0][preds_class]}')
 
 if __name__ == "__main__":
-    train()
+    parser = argparse.ArgumentParser(description='Train a model.')
+    parser.add_argument('directory', type=str, help='Directory of the data')
+    # parser.add_argument('--destination', type=str, default='learnings',)
+    parser.add_argument('--max_images', type=int, default=512,
+                        help='Maximum number of images')
+    parser.add_argument("--max_images_validation", type=int, default=64,
+                        help="Maximum number of images for validation")
+    parser.add_argument("--max_images_test", type=int, default=64,
+                        help="Maximum number of images for test")
+    args = parser.parse_args()
+
+    chek_args(args)
+    print(colored(f.renderText('Leaffliction :'), 'green') +
+          colored(f.renderText('Train'), 'magenta'))
+    data_augmentation(args.directory, args.max_images,
+                      args.max_images_validation, args.max_images_test)
+    num_classes = len(os.listdir(args.directory))
+    main_classe = args.directory.rstrip('/')
+    main_classe = main_classe.split("/")[-1]
+    train(main_classe, num_classes)

@@ -1,20 +1,23 @@
+import os
 from keras.models import load_model
 import numpy as np
 from PIL import Image
 
+from src.data_preprocessing import get_preprocessing
 
-from classification.utils.data_preprocessing import get_preprocessing
+
 
 def predict():
-    model = load_model('final_model.keras')
-    train, test, validation = get_preprocessing()
-    preds = model.predict(validation)  # Running model on the validation dataset
-    val_loss, val_acc = model.evaluate(validation) # Obtaining Loss and Accuracy on the val dataset
+    model = load_model('best_model.keras')
 
-    print('\nValidation Loss: ', val_loss)
-    print('\nValidation Accuracy: ', np.round(val_acc * 100), '%')
+    # validation = get_preprocessing("learnings/augmented_images/validation")
+    # preds = model.predict(validation)  # Running model on the validation dataset
+    # val_loss, val_acc = model.evaluate(validation) # Obtaining Loss and Accuracy on the val dataset
 
-    image_path = '../datasets/Validation/Healthy/9bd4cc8c52e9d52a.jpg'
+    # print('\nValidation Loss: ', val_loss)
+    # print('\nValidation Accuracy: ', np.round(val_acc * 100), '%')
+
+    image_path = '../datasets/images/Apple/Apple_scab/image (342).JPG'
     original_image = Image.open(image_path)
     og_width, og_height = original_image.size
 
@@ -31,7 +34,7 @@ def predict():
     preprocessed_image = np.array(preprocessed_image) / 255.0
 
     preds = model.predict(np.expand_dims(preprocessed_image, axis = 0))
-    labels = ['Healthy', 'Powdery', 'Rust']
+    labels = os.listdir('learnings/augmented_images/validation')
 
     preds_class = np.argmax(preds)
     preds_label = labels[preds_class]

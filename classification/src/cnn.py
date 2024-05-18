@@ -9,7 +9,8 @@ from keras.layers import Flatten # Layer used to flatten 2D arrays for fully-con
 from keras.layers import Dense # This layer adds fully-connected layers to the neural network.
 from keras.layers import Input
 
-from classification.utils.data_modification import get_augmentation
+from src.data_modification import get_modification
+
 
 
 
@@ -30,7 +31,7 @@ from classification.utils.data_modification import get_augmentation
 
 # Configuring CPU for apple silicon
 
-def get_model():
+def get_model(num_classes):
 
     cpus = tf.config.experimental.list_physical_devices('CPU')
     if cpus:
@@ -47,9 +48,9 @@ def get_model():
     with strategy.scope():
         model = Sequential()
 
-        augmentation = get_augmentation() # Getting data augmentation pipeline
+        # augmentation = get_modification() # Getting data augmentation pipeline
         model.add(Input(shape=(256,256,3))) # Input image shape
-        model.add(augmentation) # Adding data augmentation pipeline to the model
+        # model.add(augmentation) # Adding data augmentation pipeline to the model
 
         # Feature Learning Layers
         model.add(Conv2D(32,                  # Number of filters/Kernels
@@ -95,7 +96,7 @@ def get_model():
         model.add(Dropout(0.5))
 
         # Output Layer
-        model.add(Dense(3, activation = 'softmax')) # Classification layer
+        model.add(Dense(num_classes, activation = 'softmax')) # Classification layer
 
         # Compiling model
         model.compile(optimizer = tf.keras.optimizers.RMSprop(0.0001), # 1e-4
