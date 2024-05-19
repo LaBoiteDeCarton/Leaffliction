@@ -1,6 +1,6 @@
+import uuid
 import os
 import tensorflow as tf
-import uuid
 from src.data_modification import get_modification
 from src.data_preprocessing import get_preprocessing
 
