@@ -5,3 +5,4 @@ tensorflow
 matplotlib
 argparse
 pyfiglet
+opencv-python
