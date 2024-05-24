@@ -26,3 +26,5 @@ datasets
 *.keras
 
 augmented_images/
+
+learnings.zip
