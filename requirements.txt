@@ -1,4 +1,8 @@
 flake8
 scikit-image
 matplotlib
+pyfiglet
+argparse
 plantcv
+termcolor
+tensorflow

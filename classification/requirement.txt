@@ -1,0 +1,8 @@
+pillow
+numpy
+plotly
+tensorflow
+matplotlib
+argparse
+pyfiglet
+opencv-python

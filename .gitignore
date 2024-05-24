@@ -19,3 +19,11 @@ build/
 # Virtual environment
 venv/
 .venv/
+
+datasets
+
+.DS_Store
+
+*.keras
+
+augmented_images/
