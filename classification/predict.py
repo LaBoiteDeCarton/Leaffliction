@@ -6,8 +6,10 @@ from keras.models import load_model
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
-
 from src.data_preprocessing import get_preprocessing
+from termcolor import colored
+from pyfiglet import Figlet
+f = Figlet(font='slant')
 
 
 def check_image_arg(image):
@@ -132,4 +134,6 @@ if __name__ == "__main__":
     parser.add_argument("image", type=str, help='Path to the image to predict')
     args = parser.parse_args()
     check_args(args)
+    print(colored(f.renderText('Leaffliction :'), 'green') +
+          colored(f.renderText('Predict'), 'magenta'))
     predict(args)
