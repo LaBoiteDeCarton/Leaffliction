@@ -33,15 +33,9 @@ def data_augmentation(directory, max_images, max_images_validation,
 
 
 def check_learnings():
-    try:
-        if not os.path.exists("learnings"):
-            if os.path.exists("learnings.zip"):
-                os.system("unzip learnings.zip")
-            else:
-                raise ValueError("learnings folder not found")
-    except ValueError as e:
-        print(colored(e, 'red'))
-        exit(1)
+    if not os.path.exists("learnings"):
+        if os.path.exists("learnings.zip"):
+            os.system("unzip learnings.zip")
 
 
 def train(main_classe, num_classes):

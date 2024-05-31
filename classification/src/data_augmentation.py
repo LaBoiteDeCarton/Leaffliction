@@ -41,10 +41,8 @@ def save_images(dataset, name_category, classes, classe_count, main_classe,
             image = augmentation(image, training=True)
             image = tf.keras.preprocessing.image.array_to_img(image)
             image_id = uuid.uuid4()
-            image_path = (
-                f'learnings/augmented_images/{main_classe}/{name_category}/'
-                f'{class_name}/{name_category}_{image_id}.jpg'
-            )
+            image_path = f'learnings/augmented_images/{main_classe}/' + \
+                f'{name_category}/{class_name}/{name_category}_{image_id}.jpg'
             image.save(image_path)
             classe_count[class_name] += 1
 
@@ -80,10 +78,8 @@ def check_data(directory, name_category, main_classe, max_images):
     classe_count = {class_name: 0 for class_name in list}
 
     for class_name in list:
-        path = (
-            f'learnings/augmented_images/{main_classe}/{name_category}/'
+        path = f'learnings/augmented_images/{main_classe}/{name_category}/' + \
             f'{class_name}/'
-        )
         if not os.path.exists(path):
             return False
         count = len(os.listdir(path))
@@ -113,19 +109,15 @@ def augment_data(directory, name_category, max_images=512):
     main_classe = directory.rstrip('/')
     main_classe = main_classe.split("/")[-1]
     if check_data(directory, name_category, main_classe, max_images):
-        msg = (
-            f"{name_category} data for {main_classe} set"
+        msg = f"{name_category} data for {main_classe} set" + \
             " has already been augmented."
-        )
         print(msg)
         return
     os.makedirs(f'learnings/augmented_images/{main_classe}/{name_category}',
                 exist_ok=True)
     for class_name in list:
-        path = (
-            f'learnings/augmented_images/{main_classe}/{name_category}/'
+        path = f'learnings/augmented_images/{main_classe}/{name_category}/' + \
             f'{class_name}'
-        )
         os.makedirs(path, exist_ok=True)
 
     while True:
