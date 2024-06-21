@@ -27,3 +27,5 @@ datasets
 *.keras
 
 augmented_images/
+
+image *
