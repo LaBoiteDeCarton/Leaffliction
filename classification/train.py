@@ -55,9 +55,9 @@ if __name__ == "__main__":
     parser.add_argument('directory', type=str, help='Directory of the data')
     parser.add_argument('--max_images', type=int, default=512,
                         help='Maximum number of images')
-    parser.add_argument("--max_images_validation", type=int, default=64,
+    parser.add_argument("--max_images_validation", type=int, default=100,
                         help="Maximum number of images for validation")
-    parser.add_argument("--max_images_test", type=int, default=64,
+    parser.add_argument("--max_images_test", type=int, default=100,
                         help="Maximum number of images for test")
     args = parser.parse_args()
 

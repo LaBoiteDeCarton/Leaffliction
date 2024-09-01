@@ -46,8 +46,8 @@ python train.py <directory> [--max_images MAX_IMAGES] [--max_images_validation M
 
 - `<directory>`: Path to the directory containing the image data.
 - `--max_images`: Maximum number of images for training (default: 512).
-- `--max_images_validation`: Maximum number of images for validation (default: 64).
-- `--max_images_test`: Maximum number of images for testing (default: 64).
+- `--max_images_validation`: Maximum number of images for validation (default: 100).
+- `--max_images_test`: Maximum number of images for testing (default: 100).
 
 To predict leaf affliction from an image:
 
